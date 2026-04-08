@@ -32,15 +32,7 @@ public class Main {
                     break;
 
                 case 3:
-                    System.out.print("Enter ID to search: ");
-                    int id = sc.nextInt();
-                    Student s = service.searchById(id);
-
-                    if (s == null) {
-                        System.out.println(" Student not found.");
-                    } else {
-                        System.out.println(s);
-                    }
+                   service.searchStudentById(sc);
                     break;
 
                 case 4:

@@ -1,28 +1,27 @@
 package com.student.management;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 public class StudentService {
     private ArrayList<Student> students = new ArrayList<>();
 
         // Add student
-        public void addStudent(Scanner sc) {
+
+    public void addStudent(Scanner sc) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
             System.out.print("Enter ID: ");
             int id = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine();
 
-            if(isIdExists(id))
-            {
-                System.out.println("Students with this id already exists!");
-                return;
-            }
             System.out.print("Enter Name: ");
             String name = sc.nextLine();
 
-            if(name.trim().isEmpty())
-            {
-                System.out.println("Name cannot be empty!");
-                return;
-            }
             System.out.print("Enter Course: ");
             String course = sc.nextLine();
 
@@ -32,105 +31,169 @@ public class StudentService {
             System.out.print("Enter Marks: ");
             int marks = sc.nextInt();
 
-            if(marks<0 || marks>100)
-            {
-                System.out.println("Marks must be between 0 and 100");
-                return;
-            }
-            Student s = new Student(id, name, course, branch, marks);
-            students.add(s);
+            String query = "INSERT INTO students VALUES (?, ?, ?, ?, ?)";
 
-            System.out.println("✅ Student added successfully!");
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, id);
+            ps.setString(2, name);
+            ps.setString(3, course);
+            ps.setString(4, branch);
+            ps.setInt(5, marks);
+
+            ps.executeUpdate();
+
+            System.out.println("✅ Student added to database!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
         // View all students
-        public void viewAllStudents() {
-            if (students.isEmpty()) {
-                System.out.println(" No students found.");
-                return;
+
+    public void viewAllStudents() {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String query = "SELECT * FROM students";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                        "ID: " + rs.getInt("id") +
+                                ", Name: " + rs.getString("name") +
+                                ", Course: " + rs.getString("course") +
+                                ", Branch: " + rs.getString("branch") +
+                                ", Marks: " + rs.getInt("marks")
+                );
             }
 
-            for (Student s : students) {
-                System.out.println(s);
+            if (!found) {
+                System.out.println("⚠️ No students found.");
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
         // Search student by ID
-        public Student searchById(int id) {
-            for (Student s : students) {
-                if (s.getId() == id) {
-                    return s;
+        public void searchStudentById(Scanner sc) {
+            try {
+                Connection con = DBConnection.getConnection();
+
+                System.out.print("Enter ID to search: ");
+                int id = sc.nextInt();
+
+                String query = "SELECT * FROM students WHERE id = ?";
+                PreparedStatement ps = con.prepareStatement(query);
+
+                ps.setInt(1, id);
+
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    System.out.println(
+                            "ID: " + rs.getInt("id") +
+                                    ", Name: " + rs.getString("name") +
+                                    ", Course: " + rs.getString("course") +
+                                    ", Branch: " + rs.getString("branch") +
+                                    ", Marks: " + rs.getInt("marks")
+                    );
+                } else {
+                    System.out.println("❌ Student not found.");
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return null;
         }
     // Update student details
     public void updateStudent(Scanner sc) {
-        System.out.print("Enter ID to update: ");
-        int id = sc.nextInt();
-        sc.nextLine();
+        try {
+            Connection con = DBConnection.getConnection();
 
-        Student s = searchById(id);
+            System.out.print("Enter ID to update: ");
+            int id = sc.nextInt();
+            sc.nextLine();
 
-        if (s == null) {
-            System.out.println(" Student not found.");
-            return;
+            // Check if student exists
+            String checkQuery = "SELECT * FROM students WHERE id = ?";
+            PreparedStatement checkPs = con.prepareStatement(checkQuery);
+            checkPs.setInt(1, id);
+            ResultSet rs = checkPs.executeQuery();
+
+            if (!rs.next()) {
+                System.out.println("❌ Student not found.");
+                return;
+            }
+
+            // Take new values
+            System.out.print("Enter new Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Enter new Course: ");
+            String course = sc.nextLine();
+
+            System.out.print("Enter new Branch: ");
+            String branch = sc.nextLine();
+
+            System.out.print("Enter new Marks: ");
+            int marks = sc.nextInt();
+
+            // Update query
+            String query = "UPDATE students SET name=?, course=?, branch=?, marks=? WHERE id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, name);
+            ps.setString(2, course);
+            ps.setString(3, branch);
+            ps.setInt(4, marks);
+            ps.setInt(5, id);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("✅ Student updated successfully!");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        System.out.print("Enter new Name: ");
-        String name=sc.nextLine();
-        if(name.trim().isEmpty())
-        {
-            System.out.println("Name cannot be empty!");
-            return;
-        }
-        s.setName(sc.nextLine());
-
-
-        System.out.print("Enter new Course: ");
-        s.setCourse(sc.nextLine());
-
-        System.out.print("Enter new Branch: ");
-        s.setBranch(sc.nextLine());
-
-        System.out.print("Enter new Marks: ");
-        int marks=sc.nextInt();
-        if(marks<0 ||marks>100)
-        {
-            System.out.println("Marks must be between 0 and 100");
-            return;
-        }
-        s.setMarks(sc.nextInt());
-
-        System.out.println(" Student updated successfully!");
     }
+
 
     // Delete student
     public void deleteStudent(Scanner sc) {
-        System.out.print("Enter ID to delete: ");
-        int id = sc.nextInt();
+        try {
+            Connection con = DBConnection.getConnection();
 
-        Student s = searchById(id);
+            System.out.print("Enter ID to delete: ");
+            int id = sc.nextInt();
 
-        if (s == null) {
-            System.out.println(" Student not found.");
-            return;
-        }
+            String query = "DELETE FROM students WHERE id=?";
+            PreparedStatement ps = con.prepareStatement(query);
 
-        students.remove(s);
-        System.out.println(" Student deleted successfully!");
-    }
+            ps.setInt(1, id);
 
-    //Check if Id already exists
-    public boolean isIdExists(int id)
-    {
-        for(Student s: students)
-        {
-            if(s.getId()==id)
-            {
-                return true;
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("✅ Student deleted successfully!");
+            } else {
+                System.out.println("❌ Student not found.");
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return false;
     }
+
+
     }
