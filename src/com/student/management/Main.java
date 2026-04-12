@@ -7,7 +7,35 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         StudentService service = new StudentService();
+        AdminService adminService = new AdminService();
+        //adminService.registerAdmin("admin","admin123");
 
+        boolean isAuthenticated = false;
+        int attempts = 3;
+
+        while (attempts > 0) {
+            System.out.println("\n===== ADMIN LOGIN =====");
+            System.out.print("Enter Username: ");
+            String username = sc.nextLine();
+
+            System.out.print("Enter Password: ");
+            String password = sc.nextLine();
+
+            if (adminService.login(username, password)) {
+                System.out.println("✅ Login successful!");
+                isAuthenticated = true;
+                break;
+            } else {
+                attempts--;
+                System.out.println("❌ Invalid credentials. Attempts left: " + attempts);
+            }
+        }
+
+        if (!isAuthenticated) {
+            System.out.println("🚫 Too many failed attempts. Exiting...");
+            sc.close();
+            return;
+        }
         int choice;
 
         do {
@@ -20,7 +48,14 @@ public class Main {
             System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
 
+            // Handle invalid numeric input
+            while (!sc.hasNextInt()) {
+                System.out.println("⚠️ Please enter a valid number.");
+                sc.next(); // discard invalid input
+            }
+
             choice = sc.nextInt();
+            sc.nextLine();
 
             switch (choice) {
                 case 1:
