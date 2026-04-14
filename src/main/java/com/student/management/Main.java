@@ -15,8 +15,8 @@ public class Main {
 
         while (attempts > 0) {
             System.out.println("\n===== ADMIN LOGIN =====");
-            System.out.print("Enter Username: ");
             String username = sc.nextLine();
+
 
             System.out.print("Enter Password: ");
             String password = sc.nextLine();

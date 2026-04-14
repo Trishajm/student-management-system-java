@@ -1,0 +1,13 @@
+2026-04-14 18:18:26 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:18:54 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:18:54 INFO  c.student.management.StudentService - Student added successfully with ID: 7
+2026-04-14 18:18:57 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:31:44 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:31:48 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:31:48 INFO  c.student.management.StudentService - Fetching all student records
+2026-04-14 18:31:48 INFO  c.student.management.StudentService - Student records fetched successfully
+2026-04-14 18:32:13 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:32:13 INFO  c.student.management.StudentService - Student with ID 7 deleted successfully
+2026-04-14 18:32:17 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:32:17 INFO  c.student.management.StudentService - Fetching all student records
+2026-04-14 18:32:17 INFO  c.student.management.StudentService - Student records fetched successfully

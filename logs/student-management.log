@@ -1,0 +1,4 @@
+2026-04-14 18:42:35 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:43:29 INFO  com.student.management.DBConnection - Database connection established successfully.
+2026-04-14 18:43:29 INFO  com.student.management.StudentService - Fetching all student records
+2026-04-14 18:43:29 INFO  com.student.management.StudentService - Student records fetched successfully
