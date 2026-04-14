@@ -45,7 +45,10 @@ public class Main {
             System.out.println("3. Search Student by ID");
             System.out.println("4. Update Student");
             System.out.println("5. Delete Student");
-            System.out.println("6. Exit");
+            System.out.println("6. Search Student by Name");
+            System.out.println("7. Filter Students by Branch");
+            System.out.println("8. Sort Students by Marks");
+            System.out.println("9. Exit");
             System.out.print("Enter your choice: ");
 
             // Handle invalid numeric input
@@ -79,6 +82,16 @@ public class Main {
                     break;
 
                 case 6:
+                    service.searchStudentByName(sc);
+                    break;
+                case 7:
+                    service.filterStudentsByBranch(sc);
+                    break;
+                case 8:
+                    service.sortStudentsByMarks();
+                    break;
+
+                case 9:
                     System.out.println(" Exiting system. Goodbye!");
                     break;
 
@@ -86,7 +99,7 @@ public class Main {
                     System.out.println(" Invalid choice. Try again.");
             }
 
-        } while (choice != 6);
+        } while (choice != 9);
 
         sc.close();
     }

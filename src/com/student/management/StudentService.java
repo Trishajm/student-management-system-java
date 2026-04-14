@@ -195,5 +195,102 @@ public class StudentService {
         }
     }
 
+    // seacrch student by name
 
+    public void searchStudentByName(Scanner sc) {
+        System.out.print("Enter name to search: ");
+        String name = sc.nextLine();
+
+        if(name.isEmpty())
+        {
+            System.out.println("name cannot be empty. Please enter a valid name");
+            return;
+        }
+
+        String query = "SELECT * FROM students WHERE name LIKE ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                        "ID: " + rs.getInt("id") +
+                                ", Name: " + rs.getString("name") +
+                                ", Course: " + rs.getString("course") +
+                                ", Branch: " + rs.getString("branch") +
+                                ", Marks: " + rs.getInt("marks")
+                );
+            }
+
+            if (!found) {
+                System.out.println("No students found with that name.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //filter student by branch
+
+    public void filterStudentsByBranch(Scanner sc) {
+        System.out.print("Enter branch (e.g., CSE): ");
+        String branch = sc.nextLine();
+
+        String query = "SELECT * FROM students WHERE branch = ?";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query)) {
+
+            ps.setString(1, branch);
+            ResultSet rs = ps.executeQuery();
+
+            boolean found = false;
+            while (rs.next()) {
+                found = true;
+                System.out.println(
+                        "ID: " + rs.getInt("id") +
+                                ", Name: " + rs.getString("name") +
+                                ", Course: " + rs.getString("course") +
+                                ", Branch: " + rs.getString("branch") +
+                                ", Marks: " + rs.getInt("marks")
+                );
+            }
+
+            if (!found) {
+                System.out.println("No students found for this branch.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //sort student ny marks
+    public void sortStudentsByMarks() {
+        String query = "SELECT * FROM students ORDER BY marks DESC";
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                System.out.println(
+                        "ID: " + rs.getInt("id") +
+                                ", Name: " + rs.getString("name") +
+                                ", Course: " + rs.getString("course") +
+                                ", Branch: " + rs.getString("branch") +
+                                ", Marks: " + rs.getInt("marks")
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     }
